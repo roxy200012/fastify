@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <div class="container">
+        <div class="row">
+            <div class="col-md-6 offset-md-3">
+                <h1 style="color: crimson;"><%= title %></h1>
+
+                
+
+                
+                <table  >
+                    <tr>
+                        <th style="text-align: center;">Data</th>
+                        <th style="text-align: center;">Cavo Rete</th>
+                        <th style="text-align: center;">Alimentatore</th>
+                        <th style="text-align: center;">Borsa</th>
+                        <th style="text-align: center;">Mouse</th>
+                        <th style="text-align: center;">HDD</th>
+                        <th style="text-align: center;">Connettore Ethernet</th>
+                        <th style="text-align: center;">Connettore USB</th>
+                        <th style="text-align: center;">Note</th>
+                        <th style="text-align: center;">Motivazione</th>
+                        <th style="text-align: center;">Seriale</th>
+                        <th style="text-align: center;">Nome</th>
+                        <th style="text-align: center;">Cognome</th>
+                        <th style="text-align: center;">Corso</th>
+                        
+                    </tr>
+                    <% dati.forEach(d => { %>
+                      <tr >
+                        <td style="text-align: center;"><%=d.data.toLocaleDateString()%></td>  
+                        <td style="text-align: center;"><%=d.cavo_rete%></td>
+                        <td style="text-align: center;"><%=d.alimentatore%></td>
+                        <td style="text-align: center;"><%=d.borsa%></td>
+                        <td style="text-align: center;"><%=d.mouse%></td>
+                        <td style="text-align: center;"><%=d.hdd%></td>
+                        <td style="text-align: center;"><%=d.con_ethernet%></td>
+                        <td style="text-align: center;"><%=d.con_usb%></td>
+                        <td style="text-align: center;"><%=d.note%></td>
+                        <td style="text-align: center;"><%=d.note_movimento%></td>
+                        <td style="text-align: center;"><%=d.Seriale%></td>
+                        <td style="text-align: center;"><%=d.nome%></td>
+                        <td style="text-align: center;"><%=d.cognome%></td>
+                        <td style="text-align: center;"><%=d.corso%></td>
+                        
+                      </tr>
+                    <%}); %>
+                </table>
+
+                
+
+            </div>
+        </div>
+    </div>
+    
+    <script src="/node_modules/jquery/dist/jquery.min.js"></script>
+    <script src="/node_modules/bootstrap/dist/js/bootstrap.min.js"></script>
+</body>
+</html>

@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <div class="container">
+        <div class="row">
+            <div class="col-md-3 offset-md-3">
+                <h1 style="color: crimson;"><%= title %></h1>
+
+                
+
+                
+                <table >
+                    <tr>
+                        <th>Data Consegna</th>
+                        <th>Cavo rete</th>
+                        <th>Alimentatore</th>
+                        <th>Borsa</th>
+                        <th>Mouse</th>
+                        <th>Hdd</th>
+                        <th>Connettore ethernet</th>
+                        <th>Connettore usb</th>
+                        <th>Note</th>
+                        <th>Motivazione</th>
+                        
+                        
+                        
+                    </tr>
+                    <% dati.forEach(d => { %>
+                      <tr >
+                          <td style="text-align: center;"><%=d.data_consegna.toLocaleDateString()%></td>
+                          <td style="text-align: center;"><%=d.cavo_rete%></td>
+                          <td style="text-align: center;"><%=d.alimentatore%></td>
+                          <td style="text-align: center;"><%=d.borsa%></td>
+                          <td style="text-align: center;"><%=d.mouse%></td>
+                          <td style="text-align: center;"><%=d.hdd%></td>
+                          <td style="text-align: center;"><%=d.con_ethernet%></td>
+                          <td style="text-align: center;"><%=d.con_usb%></td>
+                          <td style="text-align: center;"><%=d.note%></td>
+                          <td style="text-align: center;"><%=d.note_movimento%></td>
+                    
+                          
+                          
+                      </tr>
+                    <%}); %>
+                </table>
+                
+                
+
+            </div>
+        </div>
+    </div>
+    
+    <script src="/node_modules/jquery/dist/jquery.min.js"></script>
+    
+    <script src="/node_modules/bootstrap/dist/js/bootstrap.min.js"></script>
+    
+</body>
+</html>

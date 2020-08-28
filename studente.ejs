@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <div class="container">
+        <div class="row">
+            <div class="col-md-3 offset-md-3">
+                <h1 style="color: crimson;"><%= title %></h1>
+                <% dati.forEach(d => { %>
+               Nome: <%=d.nome%>
+               <br>
+               Cognome:<%=d.cognome%>
+               <br>
+               Data di Nascita: <%=d.data_nascita.toDateString()%>
+               <br>
+               Luodo di Nascita:  <%=d.luogo_nascita%>
+               <br>
+               Indirizzo :<%=d.via%>
+               , <%=d.civico%>
+               &nbsp; <%=d.comune%>
+                (<%=d.provincia_sigla%>)
+                <br>
+                Corso:<%=d.corso%>
+                
+            </div>
+        </div>
+    </div>    
+    <script src="/node_modules/jquery/dist/jquery.min.js"></script>
+    
+    <script src="/node_modules/bootstrap/dist/js/bootstrap.min.js"></script>
+    
+</body>
+</html>

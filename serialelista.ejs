@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <div class="container">
+        <div class="row">
+            <div class="col-md-6 offset-md-3">
+                <h1 style="color: crimson;"><%= title %></h1>
+
+                
+
+                
+                <table  >
+                    <tr>
+                        <th>Seriale</th>
+                        <th>CPU</th>
+                        <th>RAM</th>
+                        <th>Memoria</th>
+                        <th>Tipo memoria</th>
+                        <th>Marca</th>
+                        <th>Modello</th>
+                        <th>N° inventario</th>
+                        <th>N° fattura</th>
+                        <th>data acquisto</th>
+                        <th>guasto</th>
+                        <th>note</th>
+                        <th>K.O.</th>
+                    </tr>
+                    <% dati.forEach(d => { %>
+                      <tr >
+                          <td style="text-align: center;"><%=d.Seriale%></td>
+                          <td style="text-align: center;"><%=d.Cpu%></td>
+                          <td style="text-align: center;"><%=d.Ram%></td>
+                          <td style="text-align: center;"><%=d.Memoria%></td>
+                          <td style="text-align: center;"><%=d.Tipo_memoria%></td>
+                          <td style="text-align: center;"><%=d.marca%></td>
+                          <td style="text-align: center;"><%=d.modello%></td>
+                          <td style="text-align: center;"><%=d.n_inventario%></td>
+                          <td style="text-align: center;"><%=d.n_fattura%></td>
+                          <td style="text-align: center;"><%=d.data_Acquisto.toLocaleDateString()%></td>
+                          <td style="text-align: center;"><%=d.guasto%></td>
+                          <td style="text-align: center;"><%=d.note%></td>
+                          <td style="text-align: center;"><%=d.K_O%></td>
+                      </tr>
+                    <%}); %>
+                </table>
+
+                
+
+            </div>
+        </div>
+    </div>
+    
+    <script src="/node_modules/jquery/dist/jquery.min.js"></script>
+    <script src="/node_modules/bootstrap/dist/js/bootstrap.min.js"></script>
+</body>
+</html>
