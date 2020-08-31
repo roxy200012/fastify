@@ -39,8 +39,8 @@ app.get('/api/students/:id', (request, reply) => {
     });
 });
 // studenti in base al corso
- app.get('/api/sede/students/corso/:corso',(request,reply)=>{
-    connection.query("select u.nome,u.cognome,u.data_nascita,u.luogo_nascita,u.via,u.civico,u.comune,u.provincia_sigla,u.frequentazione,c.corso from utente as u inner join CORSO as c on u.CORSO_idCORSO=c.idCORSO where corso=? ",[request.params.corso],(error,results,fields)=>{
+ app.get('/api/sede/students/:id/corso/:corso',(request,reply)=>{
+    connection.query("select u.nome,u.cognome,u.data_nascita,u.luogo_nascita,u.via,u.civico,u.comune,u.provincia_sigla,u.frequentazione,c.corso from utente as u inner join CORSO as c on u.CORSO_idCORSO=c.idCORSO where c.SEDE_idSEDE=? AND corso=? ",[request.params.id,request.params.corso],(error,results,fields)=>{
         app.log.info(results);
         app.log.info(fields);
         if(error){
@@ -51,8 +51,8 @@ app.get('/api/students/:id', (request, reply) => {
     });
 }); 
 // studente in base al nome 
-app.get('/api/sede/students/:nome',(request,reply)=>{
-    connection.query("select u.nome,u.cognome,u.data_nascita,u.luogo_nascita,u.via,u.civico,u.comune,u.provincia_sigla,u.frequentazione,c.corso from utente as u inner join CORSO as c on u.CORSO_idCORSO=c.idCORSO where nome=? ",[request.params.nome],(error,results,fields)=>{
+app.get('/api/sede/students/:id/nome/:nome',(request,reply)=>{
+    connection.query("select u.nome,u.cognome,u.data_nascita,u.luogo_nascita,u.via,u.civico,u.comune,u.provincia_sigla,u.frequentazione,c.corso from utente as u inner join CORSO as c on u.CORSO_idCORSO=c.idCORSO where c.SEDE_idSEDE=? AND  nome=? ",[request.params.id,request.params.nome],(error,results,fields)=>{
         app.log.info(results);
         app.log.info(fields);
         if(error){
@@ -63,8 +63,8 @@ app.get('/api/sede/students/:nome',(request,reply)=>{
     })
 })
 // dettagli studente per id studente
-app.get('/api/sede/students/details/:id', (request, reply) => {
-    connection.query("select * from utente where idUTENTE=?  ",[request.params.id], (error, results, fields) => {
+app.get('/api/sede/students/:id/details/:idu', (request, reply) => {
+    connection.query("select * from utente inner join corso on utente.CORSO_idCORSO=corso.idCORSO where corso.SEDE_idSEDE=? AND utente.idUTENTE=?  ",[request.params.id,request.params.idu], (error, results, fields) => {
         app.log.info(results);
         app.log.info(fields);
         if (error) {
