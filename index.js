@@ -160,6 +160,18 @@ app.get('/api/sede/pc/:id/stato/:idstato', function (request, reply) {
         reply.send(results);
     });
 });
+// pc e hw from sede e stato
+app.get('/api/sede/pc/:id/stato/:idstato/hw', function (request, reply) {
+    connection.query("SELECT pc.idpc,pc.HW_idHW,pc.STATO_idSTATO,pc.Seriale,pc.n_inventario,pc.n_fattura,pc.data_Acquisto,pc.note,h.idHW,h.Cpu,h.Ram,h.Memoria,h.marca,h.modello from pc inner join pc_has_sede as a on pc.idpc=a.pc_idpc inner join stato as c on pc.STATO_idSTATO=c.idStato inner join sede as s on a.sede_idsede=s.idsede inner join hw as h on pc.HW_idHW=h.idHW where s.idsede=? & c.idstato=?", [request.params.id, request.params.idstato], function (error, results, fields) {
+        app.log.info(results);
+        app.log.info(fields);
+        if (error) {
+            reply.status(500).send({ error: error.message });
+            return;
+        }
+        reply.send(results);
+    });
+});
 // funziona ma...
 app.get('/api/sede/pcwithstate/:id', function (request, reply) {
     connection.query("select pc.idpc,pc.HW_idHW,pc.STATO_idSTATO,pc.Seriale,pc.n_inventario,pc.n_fattura,pc.data_Acquisto,pc.note,m.idMOVIMENTO,m.data_consegna,m.cavo_rete,m.alimentatore,m.borsa,m.mouse,m.hdd,m.con_ethernet,m.con_usb,m.note,m.note_movimento,m.PC_idpc,m.UTENTE_idUTENTE,m.ADMIN_idADMIN from pc inner join movimento as m on pc.idpc=m.PC_idpc inner join stato as s on pc.STATO_idSTATO=s.idSTATO inner join pc_has_sede  as o on pc.idpc=o.PC_idpc  where guasto=1 || ritiro=1 || consegna=1|| KO=1||riparazione=1 AND o.SEDE_idSEDE=?", [request.params.id], function (error, results, fields) {
