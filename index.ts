@@ -2,6 +2,7 @@ import * as mysql from 'mysql';
 import * as fastify from 'fastify';
 import * as cors from 'fastify-cors';
 import * as pointOfView from 'point-of-view';
+import { request } from 'http';
 
 var connection = mysql.createPool({
     connectionLimit: 10,
@@ -147,6 +148,19 @@ app.get('/api/sede/movimento', (request, reply) => {
 
     });
 });
+// pc in base allo studente
+app.get('/api/pc/students/:id',(request,reply)=>{
+    connection.query("select u.nome,u.cognome,c.corso,pc.idpc,pc.HW_idHW,pc.note,m.data_consegna,m.cavo_rete,m.alimentatore,m.borsa,m.mouse,m.hdd,m.con_ethernet,m.con_usb,m.note,m.note_movimento,s.idSTATO from utente as u inner join CORSO as c on u.CORSO_idCORSO=c.idCORSO inner join movimento as m on m.UTENTE_idUTENTE=u.idUTENTE inner join pc on m.PC_idpc=pc.idpc inner join STATO as s on pc.STATO_idSTATO=s.idSTATO where u.idUTENTE=? order by m.data_consegna desc",[request.params.id],(error,results,fields)=>{
+        app.log.info(results);
+        app.log.info(fields);
+        if (error) {
+            reply.status(500).send({ error: error.message });
+            return;
+        }
+        reply.send(results)
+    });
+});
+
 // funziona ma...
 app.get('/api/pc', (request, reply) => {
     connection.query("select pc.idpc,pc.HW_idHW,pc.STATO_idSTATO,pc.Seriale,pc.n_inventario,pc.n_fattura,pc.data_Acquisto,pc.note,m.idMOVIMENTO,m.data_consegna,m.cavo_rete,m.alimentatore,m.borsa,m.mouse,m.hdd,m.con_ethernet,m.con_usb,m.note,m.note_movimento,m.PC_idpc,m.UTENTE_idUTENTE,m.ADMIN_idADMIN from pc inner join movimento as m on pc.idpc=m.PC_idpc inner join stato as s on pc.STATO_idSTATO=s.idSTATO where guasto=1 || ritiro=1 || consegna=1|| KO=1||riparazione=1",(error, results, fields) => {
@@ -158,7 +172,7 @@ app.get('/api/pc', (request, reply) => {
         }
         reply.send(results)
     });
-    ;
+    
 });
 
 // --------Ultimi Ritiri
