@@ -123,7 +123,7 @@ app.get('/api/sede/pc/:id', (request, reply) => {
 // insert di pc 
 app.post('/api/sede/pc', (request, reply) => {
     let pc=request.body;
-    connection.query("INSERT INTO pc (HW_idHW,Seriale,n_inventario,n_fattura,data_Acquisto,note) values(?,?,?,?,?,?) ",[pc.HW_idHW,pc.Seriale,pc.n_inventario,pc.n_fattura,pc.data_Acquisto,pc.note], (error, results, fields)=>{      
+    connection.query("INSERT INTO pc (HW_idHW,Seriale,n_inventario,n_fattura,data_Acquisto,note,SEDE_idSEDE) values(?,?,?,?,?,?,?) ",[pc.HW_idHW,pc.Seriale,pc.n_inventario,pc.n_fattura,pc.data_Acquisto,pc.note,pc.SEDE_idSEDE], (error, results, fields)=>{      
         if(error){
             reply.status(500).send({error: error.message});
             return;
@@ -162,7 +162,7 @@ app.get('/api/sede/pc/:id/students/:idstu',(request,reply)=>{
 });
 // pc from sede id e stato id
 app.get('/api/sede/pc/:id/stato/:idstato',(request,reply)=>{
-    connection.query("select pc.idpc,pc.HW_idHW,pc.STATO_idSTATO,pc.Seriale,pc.n_inventario,pc.n_fattura,pc.data_Acquisto,pc.note from pc inner join pc_has_sede as a on pc.idpc=a.pc_idpc inner join stato as c on pc.STATO_idSTATO=c.idStato inner join sede as s on a.sede_idsede=s.idsede where s.idsede=? AND c.idstato=?",[request.params.id,request.params.idstato],(error,results,fields)=>{
+    connection.query("select pc.idpc,pc.HW_idHW,pc.STATO_idSTATO,pc.Seriale,pc.n_inventario,pc.n_fattura,pc.data_Acquisto,pc.note from pc inner join stato as c on pc.STATO_idSTATO=c.idStato inner join sede as s on pc.SEDE_idSEDE=s.idsede where s.idSEDE=? AND c.idstato=?",[request.params.id,request.params.idstato],(error,results,fields)=>{
         app.log.info(results);
         app.log.info(fields);
         if (error) {
@@ -301,17 +301,7 @@ app.post('/api/sede/admin', (request, reply) => {
     });
 });
 
-// insert di id dentro tabella scambio tra PC e SEDE 
-app.post('/api/sede/pc/pc_sede', (request, reply) => {
-    connection.query("INSERT INTO pc_has_sede (PC_idpc,SEDE_idSEDE) values(?,?)",[request.body.PC_idpc,request.body.SEDE_idSEDE], (error, results, fields)=>{      
-        if(error){
-            reply.status(500).send({error: error.message});
-            return;
-        }
-        reply.status(201).send();
-    });
 
-});
 // insert di nuovo hw
 app.post('/api/sede/hw', (request, reply) => {
     connection.query("INSERT INTO HW (Cpu,Ram,Memoria,Tipo_Memoria,marca,Modello) VALUES(?,?,?,?,?,?)", [request.body.Cpu,request.body.Ram,request.body.Memoria,request.body.Tipo_memoria,request.body.marca,request.body.modello], (error, results, fields)=>{      
