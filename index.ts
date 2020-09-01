@@ -26,7 +26,7 @@ app.register(pointOfView, {
  
 // ------------------ Studenti
 // studente by id Sede
-app.get('/api/students/:id', (request, reply) => {
+app.get('/api/sede/students/:id', (request, reply) => {
     connection.query("select u.nome,u.cognome,c.corso from utente as u inner join CORSO as c on u.CORSO_idCORSO=c.idCORSO inner join  sede as s on c.SEDE_idSEDE=s.idSEDE where c.SEDE_idSEDE=? order by u.nome asc ",[request.params.id] ,(error, results, fields) => {
        app.log.info(results);
         app.log.info(fields);
