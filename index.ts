@@ -40,19 +40,22 @@ app.get('/api/sede/students/:id', (request, reply) => {
 });
 // studenti in base al corso
  app.get('/api/sede/students/:id/corso/:corso',(request,reply)=>{
-    connection.query("select u.nome,u.cognome,u.data_nascita,u.luogo_nascita,u.via,u.civico,u.comune,u.provincia_sigla,u.frequentazione,c.corso from utente as u inner join CORSO as c on u.CORSO_idCORSO=c.idCORSO where c.SEDE_idSEDE=? AND corso=? ",[request.params.id,request.params.corso],(error,results,fields)=>{
+    connection.query("select concat('Il sottoscritto',' ',u.nome,' ',u.cognome) as 'NomeCompleto' ,concat('nato a',' ',u.luogo_nascita,' ','il',' ',u.data_nascita) as anagrafica , concat('e residente a',' ',u.comune,'(', u.provincia_sigla,')',',',u.via,',','n°',u.civico) as indirizzo from utente as u inner join corso as c on u.CORSO_idCORSO=c.idCORSO where  c.SEDE_idSEDE=? and c.corso=? ",[request.params.id,request.params.corso],(error,results,fields)=>{
         app.log.info(results);
         app.log.info(fields);
         if(error){
             reply.status(500).send({error: error.message});
             return;
         }
-        reply.send(results)
+        reply.view('/studenti.ejs', {
+            dati: results,
+            title: "Elenco Studenti",
+        })
     });
 }); 
 // studente in base al nome 
 app.get('/api/sede/students/:id/nome/:nome',(request,reply)=>{
-    connection.query("select u.nome,u.cognome,u.data_nascita,u.luogo_nascita,u.via,u.civico,u.comune,u.provincia_sigla,u.frequentazione,c.corso from utente as u inner join CORSO as c on u.CORSO_idCORSO=c.idCORSO where c.SEDE_idSEDE=? AND  nome=? ",[request.params.id,request.params.nome],(error,results,fields)=>{
+    connection.query("select u.nome,u.cognome,u.data_nascita,u.luogo_nascita,u.via,u.civico,u.comune,u.provincia_sigla,u.frequentazione,c.corso,s.SEDE from utente as u inner join CORSO as c on u.CORSO_idCORSO=c.idCORSO  inner join sede as s on c.SEDE_idSEDE=s.idSEDE where c.SEDE_idSEDE=? AND  nome=? ",[request.params.id,request.params.nome],(error,results,fields)=>{
         app.log.info(results);
         app.log.info(fields);
         if(error){
@@ -64,7 +67,7 @@ app.get('/api/sede/students/:id/nome/:nome',(request,reply)=>{
 })
 // dettagli studente per id studente
 app.get('/api/sede/students/:id/details/:idu', (request, reply) => {
-    connection.query("select * from utente inner join corso on utente.CORSO_idCORSO=corso.idCORSO where corso.SEDE_idSEDE=? AND utente.idUTENTE=?  ",[request.params.id,request.params.idu], (error, results, fields) => {
+    connection.query("select utente.nome,utente.cognome,utente.data_nascita,utente.luogo_nascita,utente.via,utente.civico,utente.comune,utente.provincia_sigla,utente.frequentazione,corso.CORSO,sede.SEDE from utente inner join corso on utente.CORSO_idCORSO=corso.idCORSO  inner join sede on corso.SEDE_idSEDE=sede.idSEDE where corso.SEDE_idSEDE=? AND utente.idUTENTE=?  ",[request.params.id,request.params.idu], (error, results, fields) => {
         app.log.info(results);
         app.log.info(fields);
         if (error) {
@@ -133,8 +136,8 @@ app.post('/api/sede/pc', (request, reply) => {
     
 });
 // elenco movimenti
-app.get('/api/sede/movimento', (request, reply) => {
-    connection.query("select distinct(m.data_consegna),m.cavo_rete,m.alimentatore,m.borsa,m.mouse,m.hdd,m.con_ethernet,m.con_usb,m.note,m.note_movimento,m.data_consegna,u.nome,u.cognome from movimento as m inner join  utente as u on m.UTENTE_idUTENTE=u.idUTENTE " ,(error, results, fields) => {
+app.get('/api/sede/movimento/:id', (request, reply) => {
+    connection.query("select distinct(m.data_consegna),m.cavo_rete,m.alimentatore,m.borsa,m.mouse,m.hdd,m.con_ethernet,m.con_usb,m.note,m.note_movimento,m.data_consegna,u.nome,u.cognome from movimento as m inner join  utente as u on m.UTENTE_idUTENTE=u.idUTENTE inner join pc on m.PC_idpc=pc.idpc inner join sede on pc.SEDE_idSEDE=sede.idSEDE where sede.idSEDE=?",[request.params.id] ,(error, results, fields) => {
         app.log.info(results);
         app.log.info(fields);
         if (error) {
@@ -148,6 +151,19 @@ app.get('/api/sede/movimento', (request, reply) => {
 
     });
 });
+app.get('/api/sede/movimenti/:id/:idstato', (request, reply) => {
+    connection.query("select m.data_consegna,m.cavo_rete,m.alimentatore,m.borsa,m.mouse,m.hdd,m.con_ethernet,m.con_usb,m.note,m.note_movimento,m.data_consegna,u.nome,u.cognome,pc.Seriale from movimento as m inner join  utente as u on m.UTENTE_idUTENTE=u.idUTENTE inner join pc on m.PC_idpc=pc.idpc inner join stato on pc.STATO_idSTATO=stato.idSTATO where pc.SEDE_idSEDE=? && stato.idSTATO=? " ,[request.params.id,request.params.idstato],(error, results, fields) => {
+        app.log.info(results);
+        app.log.info(fields);
+        if (error) {
+            reply.status(500).send({ error: error.message });
+            return;
+        }
+        reply.send(results);
+
+    });
+});
+
 // pc in base allo studente e alla sede
 app.get('/api/sede/pc/:id/students/:idstu',(request,reply)=>{
     connection.query("select u.nome,u.cognome,c.corso,pc.idpc,pc.HW_idHW,pc.note,m.data_consegna,m.cavo_rete,m.alimentatore,m.borsa,m.mouse,m.hdd,m.con_ethernet,m.con_usb,m.note,m.note_movimento,s.idSTATO from utente as u inner join CORSO as c on u.CORSO_idCORSO=c.idCORSO inner join movimento as m on m.UTENTE_idUTENTE=u.idUTENTE inner join pc on m.PC_idpc=pc.idpc inner join STATO as s on pc.STATO_idSTATO=s.idSTATO inner join sede as se on c.SEDE_idSEDE=se.idSEDE where se.idSEDE=? AND u.idUTENTE=? order by m.data_consegna desc",[request.params.id,request.params.idstu],(error,results,fields)=>{
