@@ -135,7 +135,7 @@ app.post('/api/sede/pc', (request, reply) => {
     });
     
 });
-// elenco movimenti
+// elenco movimenti in base alla sede
 app.get('/api/sede/movimento/:id', (request, reply) => {
     connection.query("select distinct(m.data_consegna),m.cavo_rete,m.alimentatore,m.borsa,m.mouse,m.hdd,m.con_ethernet,m.con_usb,m.note,m.note_movimento,m.data_consegna,u.nome,u.cognome from movimento as m inner join  utente as u on m.UTENTE_idUTENTE=u.idUTENTE inner join pc on m.PC_idpc=pc.idpc inner join sede on pc.SEDE_idSEDE=sede.idSEDE where sede.idSEDE=?",[request.params.id] ,(error, results, fields) => {
         app.log.info(results);
@@ -151,6 +151,7 @@ app.get('/api/sede/movimento/:id', (request, reply) => {
 
     });
 });
+// elenco movimenti per sede e stato
 app.get('/api/sede/movimenti/:id/:idstato', (request, reply) => {
     connection.query("select m.data_consegna,m.cavo_rete,m.alimentatore,m.borsa,m.mouse,m.hdd,m.con_ethernet,m.con_usb,m.note,m.note_movimento,m.data_consegna,u.nome,u.cognome,pc.Seriale from movimento as m inner join  utente as u on m.UTENTE_idUTENTE=u.idUTENTE inner join pc on m.PC_idpc=pc.idpc inner join stato on pc.STATO_idSTATO=stato.idSTATO where pc.SEDE_idSEDE=? && stato.idSTATO=? " ,[request.params.id,request.params.idstato],(error, results, fields) => {
         app.log.info(results);
